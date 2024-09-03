@@ -47,6 +47,3 @@ export default {
 }
 </script>
 
-<style>
-/* Add basic styling */
-</style>
