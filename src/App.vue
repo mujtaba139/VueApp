@@ -9,6 +9,7 @@
       </li>
     </ul>
     <button @click="openCamera">Open Camera</button>
+    <button v-if="cameraOpen" @click="closeCamera">Close Camera</button>
     <!-- display kar raha h camera user ko -->
     <video ref="video" width="300" height="200" autoplay></video>
   </div>
@@ -19,7 +20,9 @@ export default {
   data() {
     return {
       newTask: '',
-      tasks: []
+      tasks: [],
+      cameraOpen: false,
+      stream: null
     }
   },
   methods: {
@@ -44,14 +47,24 @@ export default {
       }
     },
     openCamera() {
-
       navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
+          this.stream = stream;
           this.$refs.video.srcObject = stream;
+          this.cameraOpen = true;
         })
         .catch(error => {
           console.error("Error accessing camera: ", error);
         });
+    },
+    closeCamera() {
+      if (this.stream) {
+        const tracks = this.stream.getTracks();
+        tracks.forEach(track => track.stop());
+        this.$refs.video.srcObject = null;
+        this.cameraOpen = false;
+        this.stream = null;
+      }
     }
   },
   created() {
