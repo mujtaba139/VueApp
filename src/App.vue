@@ -8,6 +8,9 @@
         <button @click="removeTask(index)">Delete</button>
       </li>
     </ul>
+    <button @click="openCamera">Open Camera</button>
+    <!-- display kar raha h camera user ko -->
+    <video ref="video" width="300" height="200" autoplay></video>
   </div>
 </template>
 
@@ -39,6 +42,16 @@ export default {
       if (savedTasks) {
         this.tasks = JSON.parse(savedTasks);
       }
+    },
+    openCamera() {
+
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          this.$refs.video.srcObject = stream;
+        })
+        .catch(error => {
+          console.error("Error accessing camera: ", error);
+        });
     }
   },
   created() {
@@ -46,4 +59,3 @@ export default {
   }
 }
 </script>
-
